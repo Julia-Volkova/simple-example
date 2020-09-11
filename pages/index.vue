@@ -3,9 +3,10 @@
     <div class="block mb-20">
       <FieldFilter placeholder="Введите имя..."/>
     </div>
-    <div class="block">
-      <CardPersonList :userList="userList" v-if="userList && userList.length"/>
-      <span v-else>Ничего на найдено, попробуйте изменить строку поиска</span>
+    <div class="block" v-if="isFetch">Загрузка...</div>
+    <div class="block" v-else>
+      <CardPersonList :userList="getUserList()" v-if="getUserList() && getUserList().length"/>
+      <span v-if="isFiltered && getUserList().length === 0">Ничего на найдено, попробуйте изменить строку поиска</span>
     </div>
   </div>
 </template>
@@ -25,17 +26,30 @@
     },
     async asyncData({ store }) {
       await store.dispatch(actionTypes.GET_USERS);
-      return {};
+      return {
+      };
     },
     data() {
-      return {};
+      return {
+      };
     },
     computed: {
-      userList() {
-        return this.$store.state.userList.allUsers;
+    	isFetch() {
+		    return this.$store.state.userList.isFetch;
+      },
+      isFiltered() {
+	      return this.$store.state.userList.isFilteredAllUsers;
       },
     },
-    methods: {},
+    methods: {
+    	getUserList() {
+    		if (this.$store.state.userList.isFilteredAllUsers) {
+			    return this.$store.state.userList.filteredAllUsers;
+        } else {
+			    return this.$store.state.userList.allUsers;
+        }
+      },
+    },
     directives: {},
     filters: {},
     watch: {},
