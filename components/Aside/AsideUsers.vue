@@ -4,15 +4,17 @@
       <FieldFilter placeholder="Введите имя..." isSelected/>
     </div>
     <div class="block">
-      <CardPersonList :userList="getSelectedUserList()" v-if="getSelectedUserList() && getSelectedUserList().length"/>
-      <span v-if="isFiltered && getSelectedUserList().length === 0">Ничего на найдено, попробуйте изменить строку поиска</span>
+      <CardPersonList :userList="selectedUserListForTemplate" v-if="selectedUserListForTemplate && selectedUserListForTemplate.length"/>
+      <span v-if="isFilteredSelectedUsers && selectedUserListForTemplate.length === 0">Ничего на найдено, попробуйте изменить строку поиска</span>
     </div>
   </aside>
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
 	import FieldFilter from "@/components/Field/FieldFilter";
 	import CardPersonList from "@/components/Card/CardPersonList";
+  import { getterTypes } from "@/store/userList";
 
 	export default {
 		name: "AsideUsers",
@@ -27,18 +29,12 @@
 			};
 		},
 		computed: {
-			isFiltered() {
-				return this.$store.state.userList.isFilteredSelectedUsers;
-			},
+		  ...mapGetters({
+        isFilteredSelectedUsers: getterTypes.IS_FILTERED_SELECTED_USERS,
+        selectedUserListForTemplate: getterTypes.SELECTED_USER_LIST_FOR_TEMPLATE,
+      }),
 		},
 		methods: {
-			getSelectedUserList() {
-				if (this.$store.state.userList.isFilteredSelectedUsers) {
-					return this.$store.state.userList.filteredSelectedUsers;
-				} else {
-					return this.$store.state.userList.selectedUsers;
-				}
-			},
 		},
 		directives: {},
 		filters: {},

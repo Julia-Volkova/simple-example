@@ -9,12 +9,13 @@
 .page__main {
   flex-grow: 1;
   padding: 20px;
-  background-color: $color-blue;
+  //background-color: $color-blue;
 }
 
 .page__aside {
   flex-shrink: 0;
   width: 400px;
   padding: 20px;
-  background-color: $color-green;
+  border-left: 1px solid black;
+  //background-color: $color-green;
 }

@@ -5,16 +5,17 @@
     </div>
     <div class="block" v-if="isFetch">Загрузка...</div>
     <div class="block" v-else>
-      <CardPersonList :userList="getUserList()" v-if="getUserList() && getUserList().length"/>
-      <span v-if="isFiltered && getUserList().length === 0">Ничего на найдено, попробуйте изменить строку поиска</span>
+      <CardPersonList :userList="userList" v-if="userList && userList.length"/>
+      <span v-if="isFilteredAllUsers && userList.length === 0">Ничего на найдено, попробуйте изменить строку поиска</span>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
   import FieldFilter from "@/components/Field/FieldFilter";
   import CardPersonList from "@/components/Card/CardPersonList";
-  import { actionTypes } from "@/store/userList";
+  import { getterTypes, actionTypes } from "@/store/userList";
 
   export default {
     name: "MainPage",
@@ -26,29 +27,19 @@
     },
     async asyncData({ store }) {
       await store.dispatch(actionTypes.GET_USERS);
-      return {
-      };
+      return {};
     },
     data() {
-      return {
-      };
+      return {};
     },
     computed: {
-    	isFetch() {
-		    return this.$store.state.userList.isFetch;
-      },
-      isFiltered() {
-	      return this.$store.state.userList.isFilteredAllUsers;
-      },
+      ...mapGetters({
+        userList: getterTypes.USER_LIST_FOR_TEMPLATE,
+        isFetch: getterTypes.IS_FETCH,
+        isFilteredAllUsers: getterTypes.IS_FILTERED_ALL_USERS,
+      }),
     },
     methods: {
-    	getUserList() {
-    		if (this.$store.state.userList.isFilteredAllUsers) {
-			    return this.$store.state.userList.filteredAllUsers;
-        } else {
-			    return this.$store.state.userList.allUsers;
-        }
-      },
     },
     directives: {},
     filters: {},
